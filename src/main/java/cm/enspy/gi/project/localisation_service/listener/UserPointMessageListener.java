@@ -16,7 +16,7 @@ public class UserPointMessageListener implements MessageListener<UserPointReques
 
 
     @Autowired
-    ReservationService reservationService;
+    UserPositioRepository userPositioRepository;
 
 
     @Override
@@ -28,8 +28,17 @@ public class UserPointMessageListener implements MessageListener<UserPointReques
             log.info("Publish Time: {}", msg.getPublishTime());
 
             log.info("Message received: {}", new String(msg.getData()));
+
+            UserPosition userPosition = UserPosition.builder()
+                                            .setPoint()
+                                            .setAt(LocalDateTime.now())
+                                            .setUserId(msg.getData().getUserId()) 
+                                            .isTripPosition(msg.getData().getIsTripPosition())
+                                            .build();
+
+            userPositioRepository.save(userPosition);
             
-            reservationService.applyReservationRequest(msg.getValue());           
+                       // check alarm 
 
             consumer.acknowledge(msg.getMessageId());                   
 

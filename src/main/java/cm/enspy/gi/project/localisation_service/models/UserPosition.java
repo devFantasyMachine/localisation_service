@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -34,10 +35,13 @@ public class UserPosition {
 
     private String userId;
 
+    private Boolean isTripPosition;
+
     @Column(columnDefinition = "geometry(Point,4326)")
     private Point point;
     
     @JsonProperty(access= JsonProperty.Access.READ_ONLY)
+    @OrderBy
     private LocalDateTime at;
 
 

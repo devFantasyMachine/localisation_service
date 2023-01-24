@@ -4,16 +4,20 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vividsolutions.jts.geom.Point;
+ 
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,25 +30,33 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Entity
-@Table(name="app_point")
-final public class AppPoint {
+@Table(name="itinerary")
+public class Itinerary {
     
     @Id 
-	@Column(name="point_id", updatable=false) 
-    @JsonProperty(access= JsonProperty.Access.READ_ONLY) 
-	private UUID pointId;
-
-    private String locationLabel;
-
-    private String description;
+	@Column(name="itinerary_id", updatable=false) 
+    @JsonProperty(access= JsonProperty.Access.READ_ONLY)
+	private UUID itineraryId;
 
     @JsonProperty(access= JsonProperty.Access.READ_ONLY)
     @Column(name="add_at", updatable=false)
     private LocalDateTime addAt;
-	
 
-    @Column(columnDefinition = "geometry(Point,4326)", updatable=false)
-    private Point point;
+    @Column(name="start_city", updatable=false)
+    private String startCity;
+
+    @Column(name="destination_city", updatable=false)
+    private String destinationCity;
+
+    private Float standardCost;
+
+    private String note;
+
+    private Boolean isAvailable;
+	
+    @ManyToOne(optional=false, fetch = FetchType.EAGER)
+    private AppRoute route;
+
 
     @ElementCollection
     private Set<String> pictures_paths;
