@@ -1,4 +1,4 @@
-/* package cm.enspy.gi.project.localisation_service.config;
+package cm.enspy.gi.project.localisation_service.config;
 
 import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.MessageListener;
@@ -71,4 +71,4 @@ public class PulsarConfig {
 
 
 
-  */
+  
