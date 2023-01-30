@@ -25,6 +25,7 @@ spring:
     # PotGIS configuration
     properties:
       hibernate:
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect
         jdbc: 
           lob:
             non_contextual_creation: true

@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
+import org.hibernate.annotations.Type;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -38,12 +40,16 @@ final public class AppPoint {
 
     private String description;
 
+    @Enumerated(value=EnumType.STRING)
+    private AppPointType type;
+
     @JsonProperty(access= JsonProperty.Access.READ_ONLY)
     @Column(name="add_at", updatable=false)
     private LocalDateTime addAt;
 	
 
     @Column(columnDefinition = "geometry(Point,4326)", updatable=false)
+    //@Type(value =  org.locationtech.jts.geom.Geometry.class)
     private Point point;
 
     @ElementCollection

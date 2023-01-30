@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+ 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.PrecisionModel;
+
 import cm.enspy.gi.project.localisation_service.models.AppPoint;
 import cm.enspy.gi.project.localisation_service.repositories.AppPointRepository;
 
@@ -24,15 +30,26 @@ import cm.enspy.gi.project.localisation_service.repositories.AppPointRepository;
 @RequestMapping("/api/v0/points")
 public class AppPointController {
 
+    private GeometryFactory factory = new GeometryFactory(new PrecisionModel(), 4326);
+
     @Autowired
     AppPointRepository pointRepository;
 
     @PostMapping(value = "/add")
-    public ResponseEntity<AppPoint> addAppPoint(@RequestBody AppPoint request) {
+    public ResponseEntity<AppPoint> addAppPoint(@RequestBody AppPointRequest request) {
 
-        request.setAddAt(LocalDateTime.now());
+        Point p = factory.createPoint(new Coordinate(request.getLon(), request.getLat()));
 
-        return ResponseEntity.ok(pointRepository.save(request));
+        AppPoint appPoint = AppPoint.builder()
+                                .pointId(UUID.randomUUID())
+                                .addAt(LocalDateTime.now())
+                                .description(request.getDescription())
+                                .locationLabel(request.getLocationLabel())
+                                .type(request.getType())
+                                .point(p)
+                                .build();
+
+        return ResponseEntity.ok(pointRepository.save(appPoint));
     }
 
 
